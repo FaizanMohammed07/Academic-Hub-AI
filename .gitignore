@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment files — NEVER commit these
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+client/dist/
+client/.vite/
+server/dist/
+
+# Logs
+*.log
+logs/
+server/logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test coverage
+coverage/
+
+# AWS / Cloud credentials
+*.pem
+*.p12
+credentials
+
+# Actual media files (managed via S3)
+public/assets/**/*.jpg
+public/assets/**/*.jpeg
+public/assets/**/*.png
+public/assets/**/*.gif
+public/assets/**/*.webp
+public/assets/**/*.svg
+public/assets/**/*.mp4
+public/assets/**/*.mov
+public/assets/**/*.pdf
+# Keep gitkeep and README files
+!public/assets/**/.gitkeep
+!public/assets/**/README.md
