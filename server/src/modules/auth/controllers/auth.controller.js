@@ -37,4 +37,15 @@ const getMe = (req, res) => {
   success(res, req.user, 'Profile fetched');
 };
 
-module.exports = { login, refresh, logout, forgotPassword, resetPassword, getMe };
+const updateProfile = async (req, res) => {
+  const User = require('../../users/models/user.model');
+  const { fullName, phone, avatarUrl } = req.body;
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { fullName, phone, avatarUrl },
+    { new: true, runValidators: true }
+  ).select('-passwordHash');
+  success(res, user, 'Profile updated');
+};
+
+module.exports = { login, refresh, logout, forgotPassword, resetPassword, getMe, updateProfile };

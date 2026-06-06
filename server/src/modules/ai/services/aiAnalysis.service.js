@@ -126,3 +126,18 @@ const parseQuestions = (raw) => {
 };
 
 module.exports = { analyzeSubmission, generateQuestions };
+
+// ---------------------------------------------------------------------------
+// EventBus subscription — auto-analyse whenever a submission is created
+// ---------------------------------------------------------------------------
+
+const eventBus = require('../../../shared/utils/eventBus');
+
+eventBus.on('submission.created', async (submissionId) => {
+  try {
+    await analyzeSubmission(submissionId);
+    eventBus.emit('analysis.complete', submissionId);
+  } catch (err) {
+    logger.error(`EventBus: analysis failed for submission ${submissionId}: ${err.message}`);
+  }
+});

@@ -1,11 +1,11 @@
-﻿const router = require('express').Router();
-const { authenticate } = require('../../../shared/middleware/auth.middleware');
+'use strict';
 
-router.use(authenticate);
+const router = require('express').Router();
+const { authenticate, authorize } = require('../../../shared/middleware/auth.middleware');
+const ctrl = require('../controllers/analytics.controller');
 
-// Routes for this module — full implementation in Phase 1 sprint
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'analytics.routes — implementation pending' });
-});
+router.get('/platform',      authenticate, authorize('admin'), ctrl.getPlatformAnalytics);
+router.get('/semester/:id',  authenticate, authorize('hod', 'admin'), ctrl.getSemesterAnalytics);
+router.get('/subject/:id',   authenticate, authorize('faculty', 'hod', 'admin'), ctrl.getSubjectAnalytics);
 
 module.exports = router;

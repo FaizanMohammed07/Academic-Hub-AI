@@ -51,7 +51,9 @@ apiClient.interceptors.response.use(
       } catch (refreshErr) {
         processQueue(refreshErr, null);
         useAuthStore.getState().logout();
-        window.location.href = '/login';
+        const PUBLIC_PATHS = ['/', '/login'];
+        const isPublic = PUBLIC_PATHS.includes(window.location.pathname) || window.location.pathname.startsWith('/api');
+        if (!isPublic) window.location.href = '/login';
         return Promise.reject(refreshErr);
       } finally {
         refreshing = false;

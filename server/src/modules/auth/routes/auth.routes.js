@@ -3,18 +3,14 @@ const ctrl = require('../controllers/auth.controller');
 const { authenticate } = require('../../../shared/middleware/auth.middleware');
 const { body } = require('express-validator');
 const { validate } = require('../../../shared/validators/validate');
+const { loginValidator, forgotPasswordValidator, resetPasswordValidator } = require('../validators/auth.validator');
 
-const loginRules = [
-  body('loginId').notEmpty().trim(),
-  body('password').notEmpty(),
-  body('role').isIn(['student', 'faculty', 'hod', 'admin']),
-];
-
-router.post('/login',           loginRules, validate, ctrl.login);
+router.post('/login',           loginValidator, validate, ctrl.login);
 router.post('/refresh',         body('refreshToken').notEmpty(), validate, ctrl.refresh);
 router.post('/logout',          authenticate, ctrl.logout);
-router.post('/forgot-password', body('email').isEmail(), validate, ctrl.forgotPassword);
-router.post('/reset-password',  ctrl.resetPassword);
+router.post('/forgot-password', forgotPasswordValidator, validate, ctrl.forgotPassword);
+router.post('/reset-password',  resetPasswordValidator, validate, ctrl.resetPassword);
 router.get('/me',               authenticate, ctrl.getMe);
+router.patch('/me',             authenticate, ctrl.updateProfile);
 
 module.exports = router;

@@ -9,7 +9,6 @@ const refreshTokenSchema = new mongoose.Schema({
   createdAt:   { type: Date, default: Date.now },
 });
 
-refreshTokenSchema.index({ token: 1 });
 refreshTokenSchema.index({ userId: 1 });
 refreshTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 

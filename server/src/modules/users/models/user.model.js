@@ -56,7 +56,4 @@ userSchema.methods.resetFailedAttempts = async function () {
   await this.save({ validateBeforeSave: false });
 };
 
-userSchema.index({ loginId: 1 });
-userSchema.index({ email: 1 });
-
 module.exports = mongoose.model('User', userSchema);

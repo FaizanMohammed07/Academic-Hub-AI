@@ -1,11 +1,12 @@
-﻿const router = require('express').Router();
-const { authenticate } = require('../../../shared/middleware/auth.middleware');
+'use strict';
 
-router.use(authenticate);
+const router = require('express').Router();
+const { authenticate, authorize } = require('../../../shared/middleware/auth.middleware');
+const ctrl = require('../controllers/timetable.controller');
 
-// Routes for this module — full implementation in Phase 1 sprint
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'timetable.routes — implementation pending' });
-});
+router.post('/',       authenticate, authorize('admin'), ctrl.saveTimetable);
+router.get('/',        authenticate, authorize('admin', 'hod'), ctrl.getTimetable);
+router.get('/student', authenticate, authorize('student'), ctrl.getStudentTimetable);
+router.get('/faculty', authenticate, authorize('faculty', 'hod'), ctrl.getFacultyTimetable);
 
 module.exports = router;

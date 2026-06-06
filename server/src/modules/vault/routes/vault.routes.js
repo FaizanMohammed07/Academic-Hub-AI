@@ -1,11 +1,31 @@
-﻿const router = require('express').Router();
-const { authenticate } = require('../../../shared/middleware/auth.middleware');
+'use strict';
 
-router.use(authenticate);
+const router = require('express').Router();
+const { authenticate, authorize } = require('../../../shared/middleware/auth.middleware');
+const {
+  getVaultSummary,
+  getCertificates,
+  getCertificateById,
+  generateCertificate,
+  verifyCertificate,
+} = require('../controllers/vault.controller');
 
-// Routes for this module — full implementation in Phase 1 sprint
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'vault.routes — implementation pending' });
-});
+// Public — no auth required
+router.get('/verify/:code', verifyCertificate);
+
+// Student
+router.get('/summary', authenticate, authorize('student'), getVaultSummary);
+router.get('/certificates', authenticate, authorize('student'), getCertificates);
+
+// Student or Admin
+router.get(
+  '/certificates/:id',
+  authenticate,
+  authorize('student', 'admin'),
+  getCertificateById
+);
+
+// Admin only
+router.post('/certificates', authenticate, authorize('admin'), generateCertificate);
 
 module.exports = router;

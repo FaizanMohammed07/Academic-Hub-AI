@@ -1,11 +1,16 @@
-﻿const router = require('express').Router();
-const { authenticate } = require('../../../shared/middleware/auth.middleware');
+'use strict';
 
-router.use(authenticate);
+const router = require('express').Router();
+const { authenticate, authorize } = require('../../../shared/middleware/auth.middleware');
+const ctrl = require('../controllers/quiz.controller');
 
-// Routes for this module — full implementation in Phase 1 sprint
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'quiz.routes — implementation pending' });
-});
+router.post('/',               authenticate, authorize('faculty'), ctrl.createQuiz);
+router.get('/',                authenticate, authorize('faculty', 'hod'), ctrl.getMyQuizzes);
+router.get('/student',         authenticate, authorize('student'), ctrl.getStudentQuizzes);
+router.get('/:id',             authenticate, ctrl.getQuizById);
+router.patch('/:id/publish',   authenticate, authorize('faculty'), ctrl.publishQuiz);
+router.post('/:id/attempt',    authenticate, authorize('student'), ctrl.submitAttempt);
+router.get('/:id/results',     authenticate, authorize('faculty', 'hod'), ctrl.getResults);
+router.get('/:id/my-attempt',  authenticate, authorize('student'), ctrl.getMyAttempt);
 
 module.exports = router;

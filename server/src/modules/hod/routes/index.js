@@ -1,32 +1,21 @@
+'use strict';
+
 const router = require('express').Router();
 const { authenticate, authorize } = require('../../../shared/middleware/auth.middleware');
+const {
+  getDashboard,
+  getFacultyPerformance,
+  getStudentPerformance,
+  getDepartmentAnalytics,
+  getAssignmentStats,
+} = require('../controllers/hod.controller');
 
-// All HOD routes require authentication and hod role
-router.use(authenticate, authorize('hod', 'admin'));
+const guard = [authenticate, authorize('hod', 'admin')];
 
-router.get('/dashboard', async (req, res) => {
-  // TODO: Implement HOD dashboard aggregation
-  res.json({ success: true, message: 'HOD dashboard — implementation pending' });
-});
-
-router.get('/faculty', async (req, res) => {
-  res.json({ success: true, message: 'Faculty list — implementation pending' });
-});
-
-router.get('/analytics/department', async (req, res) => {
-  res.json({ success: true, message: 'Department analytics — implementation pending' });
-});
-
-router.get('/analytics/students', async (req, res) => {
-  res.json({ success: true, message: 'Student analytics — implementation pending' });
-});
-
-router.get('/analytics/semester', async (req, res) => {
-  res.json({ success: true, message: 'Semester analytics — implementation pending' });
-});
-
-router.post('/notices', async (req, res) => {
-  res.json({ success: true, message: 'Notice published' });
-});
+router.get('/dashboard', ...guard, getDashboard);
+router.get('/faculty-performance', ...guard, getFacultyPerformance);
+router.get('/student-performance', ...guard, getStudentPerformance);
+router.get('/analytics', ...guard, getDepartmentAnalytics);
+router.get('/assignment-stats', ...guard, getAssignmentStats);
 
 module.exports = router;

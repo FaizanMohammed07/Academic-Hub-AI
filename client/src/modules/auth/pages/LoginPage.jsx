@@ -4,7 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, LogIn, GraduationCap, Users, Shield, Settings } from 'lucide-react';
+import { Navigate } from 'react-router-dom';
 import { useLogin } from '@shared/hooks/useAuth';
+import { useAuthStore } from '@store/authStore';
 import { cn } from '@shared/utils/cn';
 
 const schema = z.object({
@@ -27,9 +29,16 @@ const PLACEHOLDER = {
   admin:   'Username',
 };
 
+const ROLE_REDIRECT = { student: '/student/dashboard', faculty: '/faculty/dashboard', hod: '/hod/dashboard', admin: '/admin/dashboard' };
+
 export default function LoginPage() {
+  const { isAuthenticated, user } = useAuthStore();
   const [showPass, setShowPass] = useState(false);
   const { mutate: login, isPending } = useLogin();
+
+  if (isAuthenticated && user?.role) {
+    return <Navigate to={ROLE_REDIRECT[user.role] || '/'} replace />;
+  }
 
   const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(schema),

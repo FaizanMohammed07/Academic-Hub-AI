@@ -1,42 +1,27 @@
+'use strict';
+
 const router = require('express').Router();
 const { authenticate, authorize } = require('../../../shared/middleware/auth.middleware');
+const ctrl = require('../controllers/admin.controller');
+const { validate } = require('../../../shared/validators/validate');
+const { createUserValidator, updateUserValidator, resetPasswordValidator, updateSettingValidator } = require('../validators/admin.validator');
 
+// All admin routes require authentication and admin role
 router.use(authenticate, authorize('admin'));
 
-router.get('/dashboard', (req, res) => {
-  res.json({ success: true, message: 'Admin dashboard — implementation pending' });
-});
+/* ── User Management ─────────────────────────────────────────────────────── */
+router.post('/users', createUserValidator, validate, ctrl.createUser);
+router.get('/users', ctrl.listUsers);
+router.get('/users/:id', ctrl.getUserById);
+router.patch('/users/:id', updateUserValidator, validate, ctrl.updateUser);
+router.patch('/users/:id/password', resetPasswordValidator, validate, ctrl.resetPassword);
+router.delete('/users/:id', ctrl.deleteUser);
 
-router.get('/users', (req, res) => {
-  res.json({ success: true, message: 'User list — implementation pending' });
-});
+/* ── Settings ────────────────────────────────────────────────────────────── */
+router.get('/settings', ctrl.getAllSettings);
+router.patch('/settings/:key', updateSettingValidator, validate, ctrl.updateSetting);
 
-router.post('/users', (req, res) => {
-  res.json({ success: true, message: 'User created — implementation pending' });
-});
-
-router.get('/semesters', (req, res) => {
-  res.json({ success: true, message: 'Semesters — implementation pending' });
-});
-
-router.post('/semesters', (req, res) => {
-  res.json({ success: true, message: 'Semester created — implementation pending' });
-});
-
-router.get('/subjects', (req, res) => {
-  res.json({ success: true, message: 'Subjects — implementation pending' });
-});
-
-router.get('/audit-logs', (req, res) => {
-  res.json({ success: true, message: 'Audit logs — implementation pending' });
-});
-
-router.get('/system/stats', (req, res) => {
-  res.json({ success: true, data: { status: 'healthy', uptime: process.uptime() } });
-});
-
-router.get('/ai/config', (req, res) => {
-  res.json({ success: true, message: 'AI config — implementation pending' });
-});
+/* ── Dashboard Analytics ─────────────────────────────────────────────────── */
+router.get('/dashboard-stats', ctrl.getDashboardStats);
 
 module.exports = router;

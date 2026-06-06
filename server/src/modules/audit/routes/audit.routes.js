@@ -1,11 +1,10 @@
-﻿const router = require('express').Router();
-const { authenticate } = require('../../../shared/middleware/auth.middleware');
+'use strict';
 
-router.use(authenticate);
+const router = require('express').Router();
+const { authenticate, authorize } = require('../../../shared/middleware/auth.middleware');
+const ctrl = require('../controllers/audit.controller');
 
-// Routes for this module — full implementation in Phase 1 sprint
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'audit.routes — implementation pending' });
-});
+router.get('/',    authenticate, authorize('admin'), ctrl.getLogs);
+router.get('/:id', authenticate, authorize('admin'), ctrl.getLogById);
 
 module.exports = router;

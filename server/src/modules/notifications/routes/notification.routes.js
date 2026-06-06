@@ -1,11 +1,17 @@
-﻿const router = require('express').Router();
+'use strict';
+
+const router = require('express').Router();
 const { authenticate } = require('../../../shared/middleware/auth.middleware');
+const {
+  getNotifications,
+  markAsRead,
+  markAllAsRead,
+  getUnreadCount,
+} = require('../controllers/notification.controller');
 
-router.use(authenticate);
-
-// Routes for this module — full implementation in Phase 1 sprint
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'notification.routes — implementation pending' });
-});
+router.get('/', authenticate, getNotifications);
+router.get('/unread-count', authenticate, getUnreadCount);
+router.patch('/read-all', authenticate, markAllAsRead);
+router.patch('/:id/read', authenticate, markAsRead);
 
 module.exports = router;
